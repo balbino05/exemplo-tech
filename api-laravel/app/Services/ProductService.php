@@ -2,25 +2,19 @@
 
 namespace App\Services;
 
-use App\Repositories\ProductRepositoryInterface;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\ProductRepository;
 
 class ProductService
 {
-   public function __construct(private ProductRepositoryInterface $repo) {}
+   protected $repository;
 
-   public function createProduct(array $data)
+   public function __construct(ProductRepository $repository)
    {
-      return DB::transaction(fn() => $this->repo->create($data));
+      $this->repository = $repository;
    }
 
-   public function paginate($perPage = 15)
+   public function listProducts()
    {
-      return $this->repo->paginate($perPage);
-   }
-
-   public function find($id)
-   {
-      return $this->repo->find($id);
+      return $this->repository->getAll();
    }
 }

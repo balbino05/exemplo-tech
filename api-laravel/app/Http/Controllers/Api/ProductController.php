@@ -4,25 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
-   public function __construct(private ProductService $service) {}
+   protected $service;
 
-   public function index()
+   public function __construct(ProductService $service)
    {
-      return response()->json($this->service->paginate(15));
+      $this->service = $service;
    }
 
-   public function store(Request $r)
+   public function index(): JsonResponse
    {
-      $data = $r->validate(['name' => 'required', 'price' => 'required|numeric', 'stock' => 'integer']);
-      return response()->json($this->service->createProduct($data), 201);
+      $products = $this->service->listProducts();
+      return response()->json($products);
    }
-   public function show($id)
-   {
-      return response()->json($this->service->find($id));
-   }
-   // update, destroy -> similares
 }
