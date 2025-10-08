@@ -20,11 +20,12 @@ return [
     'schemas' => [
         'default' => [
             'query' => [
-                // Aqui você registra a query que implementa os produtos
                 'products' => \App\GraphQL\Queries\ProductsQuery::class,
             ],
             'mutation' => [
-                // Aqui você pode colocar mutations futuramente
+                'createProduct' => \App\GraphQL\Mutations\CreateProductMutation::class,
+                'updateProduct' => \App\GraphQL\Mutations\UpdateProductMutation::class,
+                'deleteProduct' => \App\GraphQL\Mutations\DeleteProductMutation::class,
             ],
             'types' => [
                 'Product' => \App\GraphQL\Types\ProductType::class,
