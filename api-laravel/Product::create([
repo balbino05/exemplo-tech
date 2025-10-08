@@ -1,0 +1,30 @@
+[90m= [39m[34;4mApp\Models\Product[39;24m {#5440
+    [34mname[39m: "[32mTeclado Mecânico RGB[39m",
+    [34mdescription[39m: "[32mTeclado gamer com switches vermelhos[39m",
+    [34mprice[39m: [33m450.0[39m,
+    [34mstock[39m: [35m25[39m,
+    [34mupdated_at[39m: "[32m2025-10-08 15:06:11[39m",
+    [34mcreated_at[39m: "[32m2025-10-08 15:06:11[39m",
+    [34mid[39m: [35m1[39m,
+  }
+
+[90m= [39m[34;4mApp\Models\Product[39;24m {#5440
+    [34mname[39m: "[32mTeclado Mecânico RGB[39m",
+    [34mdescription[39m: "[32mTeclado gamer com switches vermelhos[39m",
+    [34mprice[39m: [33m450.0[39m,
+    [34mstock[39m: [35m25[39m,
+    [34mupdated_at[39m: "[32m2025-10-08 15:06:38[39m",
+    [34mcreated_at[39m: "[32m2025-10-08 15:06:38[39m",
+    [34mid[39m: [35m2[39m,
+  }
+
+[90m= [39m[34;4mApp\Models\Product[39;24m {#5440
+    [34mname[39m: "[32mTeclado Mecânico RGB[39m",
+    [34mdescription[39m: "[32mTeclado gamer com switches vermelhos[39m",
+    [34mprice[39m: [33m450.0[39m,
+    [34mstock[39m: [35m25[39m,
+    [34mupdated_at[39m: "[32m2025-10-08 15:07:04[39m",
+    [34mcreated_at[39m: "[32m2025-10-08 15:07:04[39m",
+    [34mid[39m: [35m3[39m,
+  }
+

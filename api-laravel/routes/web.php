@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Rebing\GraphQL\GraphQLController;
-use Rebing\GraphQL\GraphQLServiceProvider;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/graphiql', function () {
-    return view('graphiql'); // criaremos a view em seguida
-});
+Route::view('/graphiql', 'graphiql');

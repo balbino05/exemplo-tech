@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
+use Rebing\GraphQL\GraphQLController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,5 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+Route::post('graphql', [GraphQLController::class, 'query']);
