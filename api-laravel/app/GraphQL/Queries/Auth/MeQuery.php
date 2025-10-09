@@ -1,32 +1,32 @@
 <?php
 
-namespace App\GraphQL\Queries;
+namespace App\GraphQL\Queries\Auth;
 
 use Rebing\GraphQL\Support\Query;
 use GraphQL\Type\Definition\Type;
-use App\Models\Product;
+use App\GraphQL\Types\UserType;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Illuminate\Support\Facades\Auth;
 
-class ProductsQuery extends Query
+class MeQuery extends Query
 {
    protected $attributes = [
-      'name' => 'products',
-      'description' => 'Lista todos os produtos (apenas autenticados)',
+      'name' => 'me',
+      'description' => 'Retorna o usuário autenticado'
    ];
 
    public function type(): Type
    {
-      return Type::listOf(GraphQL::type('Product'));
+      return GraphQL::type('User');
    }
 
    public function authorize($root, array $args, $ctx, $info = null, $getSelectFields = null): bool
    {
-      return Auth::check(); // 🔐 Apenas usuários autenticados
+      return Auth::check();
    }
 
    public function resolve($root, $args)
    {
-      return Product::all();
+      return Auth::user();
    }
 }

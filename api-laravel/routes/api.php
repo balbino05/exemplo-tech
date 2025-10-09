@@ -30,4 +30,10 @@ Route::put('/products/{id}', [ProductController::class, 'update']);
 
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
-Route::post('graphql', [GraphQLController::class, 'query']);
+Route::group(['prefix' => 'graphql'], function () {
+    Route::post('/', [\Rebing\GraphQL\GraphQLController::class, 'query']);
+});
+
+Route::middleware('api')->group(function () {
+    Route::post('/graphql', [GraphQLController::class, 'query']);
+});

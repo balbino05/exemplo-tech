@@ -17,4 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('/graphiql', 'graphiql');
+Route::get('/graphiql', function () {
+    return response()->file(resource_path('views/vendor/graphql/graphiql.blade.php'));
+});

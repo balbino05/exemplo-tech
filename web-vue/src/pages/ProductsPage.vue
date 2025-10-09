@@ -29,46 +29,12 @@
 
 <script setup>
 import { useQuery, useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
 import { computed, ref } from 'vue'
 import { Dialog, Notify } from 'quasar'
+import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCTS } from 'src/graphql/mutations'
 
 import ProductCard from 'components/ProductCard.vue'
 import ProductFormDialog from 'components/ProductFormDialog.vue'
-
-const GET_PRODUCTS = gql`
-  query {
-    products {
-      id
-      name
-      description
-      price
-      stock
-    }
-  }
-`
-
-const CREATE_PRODUCT = gql`
-  mutation ($name:String!, $description:String, $price:Float!, $stock:Int!) {
-    createProduct(name:$name, description:$description, price:$price, stock:$stock) {
-      id name description price stock
-    }
-  }
-`
-
-const UPDATE_PRODUCT = gql`
-  mutation ($id:ID!, $name:String, $description:String, $price:Float, $stock:Int) {
-    updateProduct(id:$id, name:$name, description:$description, price:$price, stock:$stock) {
-      id name description price stock
-    }
-  }
-`
-
-const DELETE_PRODUCT = gql`
-  mutation ($id:ID!) {
-    deleteProduct(id:$id)
-  }
-`
 
 const { result, loading, refetch } = useQuery(GET_PRODUCTS)
 const products = computed(() => result.value?.products ?? [])

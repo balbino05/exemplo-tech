@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\GraphQL\Mutations\Product;
 
 use App\Models\Product;
 use GraphQL\Type\Definition\Type;
