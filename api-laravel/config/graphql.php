@@ -15,7 +15,7 @@ return [
     'route' => [
         'prefix' => 'graphql',
         'controller' => \Rebing\GraphQL\GraphQLController::class . '@query',
-        'middleware' => ['api'],
+        'middleware' => [],
         'group_attributes' => [],
     ],
 
@@ -66,9 +66,11 @@ return [
 
                 // 📦 Produto
                 'Product'       => \App\GraphQL\Types\ProductType::class,
+                'ProductPagination' => \App\GraphQL\Types\ProductPaginationType::class,
+                'PaginatorInfo' => \App\GraphQL\Types\PaginatorInfoType::class,
             ],
 
-            'middleware' => ['api'],
+            'middleware' => [],
             'method' => ['POST'],
             'execution_middleware' => null,
         ],
@@ -84,6 +86,8 @@ return [
         'LoginResponse' => \App\GraphQL\Types\LoginResponseType::class,
         'AuthPayload'   => \App\GraphQL\Types\AuthPayloadType::class,
         'Product'       => \App\GraphQL\Types\ProductType::class,
+        'ProductPagination' => \App\GraphQL\Types\ProductPaginationType::class,
+        'PaginatorInfo' => \App\GraphQL\Types\PaginatorInfoType::class,
     ],
 
     /*

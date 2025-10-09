@@ -19,6 +19,16 @@
       </div>
     </div>
 
+    <div class="q-mt-lg flex justify-center">
+      <q-pagination
+        v-model="page"
+        :max="pagination.lastPage"
+        color="primary"
+        boundary-numbers
+        @update:model-value="loadPage"
+      />
+    </div>
+
     <ProductFormDialog
       v-model="dialogOpen"
       :product="selected"
@@ -29,15 +39,28 @@
 
 <script setup>
 import { useQuery, useMutation } from '@vue/apollo-composable'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Dialog, Notify } from 'quasar'
 import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCTS } from 'src/graphql/mutations'
-
 import ProductCard from 'components/ProductCard.vue'
 import ProductFormDialog from 'components/ProductFormDialog.vue'
 
-const { result, loading, refetch } = useQuery(GET_PRODUCTS)
-const products = computed(() => result.value?.products ?? [])
+// 🔹 Controle de paginação
+const page = ref(1)
+const limit = ref(8)
+
+const { result, loading, refetch } = useQuery(GET_PRODUCTS, { limit: limit.value, page: page.value })
+
+const products = computed(() => result.value?.products?.data ?? [])
+const pagination = computed(() => result.value?.products?.paginatorInfo ?? { total: 0, currentPage: 1, lastPage: 1 })
+
+watch(page, async (val) => {
+  await refetch({ limit: limit.value, page: val })
+})
+
+function loadPage(val) {
+  page.value = val
+}
 
 const dialogOpen = ref(false)
 const selected = ref(null)
@@ -64,7 +87,7 @@ async function handleSave(payload) {
       await createMut(payload)
       Notify.create({ type: 'positive', message: 'Produto criado!' })
     }
-    await refetch()
+    await refetch({ limit: limit.value, page: page.value })
   } catch (e) {
     console.error(e)
     Notify.create({ type: 'negative', message: 'Erro ao salvar produto' })
@@ -81,7 +104,7 @@ function confirmDelete(prod) {
     try {
       await deleteMut({ id: prod.id })
       Notify.create({ type: 'positive', message: 'Produto excluído!' })
-      await refetch()
+      await refetch({ limit: limit.value, page: page.value })
     } catch (e) {
       console.error(e)
       Notify.create({ type: 'negative', message: 'Erro ao excluir produto' })

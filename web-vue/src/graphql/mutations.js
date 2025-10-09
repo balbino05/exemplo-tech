@@ -1,13 +1,21 @@
 import gql from 'graphql-tag'
 
+// ✅ Corrigido: agora acessa produtos dentro de "data"
 export const GET_PRODUCTS = gql`
-query {
-  products {
-    id
-    name
-    description
-    price
-    stock
+query GetProducts($limit: Int, $page: Int) {
+  products(limit: $limit, page: $page) {
+    data {
+      id
+      name
+      description
+      price
+      stock
+    }
+    paginatorInfo {
+      total
+      currentPage
+      lastPage
+    }
   }
 }
 `
@@ -41,6 +49,7 @@ mutation($id: ID!) {
   deleteProduct(id: $id)
 }
 `
+
 export const LOGIN_MUTATION = gql`
 mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -53,4 +62,3 @@ mutation Login($email: String!, $password: String!) {
   }
 }
 `
-
