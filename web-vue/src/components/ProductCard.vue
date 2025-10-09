@@ -1,26 +1,34 @@
 <template>
    <q-card class="product-card q-pa-md q-mb-md" bordered flat>
-     <q-card-section>
-       <div class="text-h6 text-primary ellipsis">{{ product.name }}</div>
-       <div class="text-subtitle2 text-grey q-mt-xs ellipsis-2-lines">
-         {{ product.description || 'Sem descrição disponível.' }}
-       </div>
-     </q-card-section>
+    <q-card-section>
+      <div class="row items-start justify-between">
+        <div class="col">
+          <div class="text-h6 text-primary ellipsis">{{ product.name }}</div>
+          <div class="text-subtitle2 text-grey q-mt-xs ellipsis-2-lines">
+            {{ product.description || 'Sem descrição disponível.' }}
+          </div>
+        </div>
+        <div>
+          <q-btn dense flat icon="edit" @click="$emit('edit', product)" />
+          <q-btn dense flat color="negative" icon="delete" @click="$emit('delete', product)" />
+        </div>
+      </div>
+    </q-card-section>
 
      <q-separator spaced inset />
 
      <q-card-section class="q-pt-none">
-       <div class="row items-center justify-between">
-         <div class="text-bold text-positive">
-           💰 R$ {{ formatPrice(product.price) }}
-         </div>
-         <q-badge
-           :color="product.stock > 10 ? 'green' : 'red'"
-           :label="`Estoque: ${product.stock}`"
-           align="middle"
-         />
-       </div>
-     </q-card-section>
+      <div class="row items-center justify-between">
+        <div class="text-bold text-positive">
+          💰 R$ {{ formatPrice(product.price) }}
+        </div>
+        <q-badge
+          :color="product.stock > 10 ? 'green' : 'red'"
+          :label="`Estoque: ${product.stock}`"
+          align="middle"
+        />
+      </div>
+    </q-card-section>
    </q-card>
  </template>
 

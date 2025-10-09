@@ -27,6 +27,6 @@ export default defineConfig(() => ({
 
   framework: {
     config: {},
-    plugins: [],
+    plugins: [ 'Dialog', 'Notify'],
   },
 }))
