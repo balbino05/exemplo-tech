@@ -81,7 +81,13 @@ const { mutate: deleteMut } = useMutation(DELETE_PRODUCT)
 async function handleSave(payload) {
   try {
     if (payload.id) {
-      await updateMut({ id: payload.id, ...payload })
+      await updateMut({
+        id: parseInt(payload.id),
+        name: payload.name,
+        description: payload.description,
+        price: parseFloat(payload.price),
+        stock: parseInt(payload.stock)
+      })
       Notify.create({ type: 'positive', message: 'Produto atualizado!' })
     } else {
       await createMut(payload)
@@ -102,7 +108,7 @@ function confirmDelete(prod) {
     persistent: true,
   }).onOk(async () => {
     try {
-      await deleteMut({ id: prod.id })
+      await deleteMut({ id: parseInt(prod.id) })
       Notify.create({ type: 'positive', message: 'Produto excluído!' })
       await refetch({ limit: limit.value, page: page.value })
     } catch (e) {

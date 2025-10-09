@@ -23,22 +23,36 @@ class UpdateProductMutation extends Mutation
    public function args(): array
    {
       return [
-         'id' => ['name' => 'id', 'type' => Type::nonNull(Type::int())],
-         'name' => ['name' => 'name', 'type' => Type::string()],
-         'price' => ['name' => 'price', 'type' => Type::float()],
-         'description' => ['name' => 'description', 'type' => Type::string()],
+         'id' => ['type' => Type::nonNull(Type::int())],
+         'name' => ['type' => Type::string()],
+         'description' => ['type' => Type::string()],
+         'price' => ['type' => Type::float()],
+         'stock' => ['type' => Type::int()],
       ];
    }
 
-   public function authorize($root, array $args, $ctx, $info = null, $getSelectFields = null): bool
+   public function authorize($root, array $args, $ctx, ?\GraphQL\Type\Definition\ResolveInfo $info = null, ?\Closure $getSelectFields = null): bool
    {
-      return Auth::check();
+      return Auth::guard('api')->check();
    }
 
    public function resolve($root, $args)
    {
+      $user = Auth::guard('api')->user();
+
+      if (! $user) {
+         throw new \Exception('Unauthorized');
+      }
+
       $product = Product::findOrFail($args['id']);
-      $product->update($args);
+
+      $product->update([
+         'name' => $args['name'] ?? $product->name,
+         'description' => $args['description'] ?? $product->description,
+         'price' => $args['price'] ?? $product->price,
+         'stock' => $args['stock'] ?? $product->stock,
+      ]);
+
       return $product;
    }
 }

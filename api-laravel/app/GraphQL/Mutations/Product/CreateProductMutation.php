@@ -23,26 +23,31 @@ class CreateProductMutation extends Mutation
    public function args(): array
    {
       return [
-         'name' => ['name' => 'name', 'type' => Type::nonNull(Type::string())],
-         'price' => ['name' => 'price', 'type' => Type::nonNull(Type::float())],
-         'description' => ['name' => 'description', 'type' => Type::string()],
+         'name' => ['type' => Type::nonNull(Type::string())],
+         'description' => ['type' => Type::string()],
+         'price' => ['type' => Type::nonNull(Type::float())],
+         'stock' => ['type' => Type::int()],
       ];
    }
 
-   public function authorize($root, array $args, $ctx, $info = null, $getSelectFields = null): bool
+   public function authorize($root, array $args, $ctx, ?\GraphQL\Type\Definition\ResolveInfo $info = null, ?\Closure $getSelectFields = null): bool
    {
-      return Auth::check(); // 🔐 Apenas usuários autenticados
+      return Auth::guard('api')->check();
    }
 
    public function resolve($root, $args)
    {
-      $user = Auth::user();
+      $user = Auth::guard('api')->user();
+
+      if (! $user) {
+         throw new \Exception('Unauthorized');
+      }
 
       return Product::create([
          'name' => $args['name'],
-         'price' => $args['price'],
          'description' => $args['description'] ?? null,
-         'user_id' => $user->id,
+         'price' => $args['price'],
+         'stock' => $args['stock'] ?? 0,
       ]);
    }
 }

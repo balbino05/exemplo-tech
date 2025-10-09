@@ -2,15 +2,16 @@
 
 namespace App\GraphQL\Mutations\Product;
 
-use App\Models\Product;
-use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Mutation;
+use GraphQL\Type\Definition\Type;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 
 class DeleteProductMutation extends Mutation
 {
    protected $attributes = [
       'name' => 'deleteProduct',
-      'description' => 'Exclui um produto pelo ID',
+      'description' => 'Exclui um produto existente (somente autenticado)',
    ];
 
    public function type(): Type
@@ -21,20 +22,29 @@ class DeleteProductMutation extends Mutation
    public function args(): array
    {
       return [
-         'id' => ['type' => Type::nonNull(Type::id())],
+         'id' => ['type' => Type::nonNull(Type::int())],
       ];
    }
 
-   public function rules(array $args = []): array
+   public function authorize($root, array $args, $ctx, ?\GraphQL\Type\Definition\ResolveInfo $info = null, ?\Closure $getSelectFields = null): bool
    {
-      return [
-         'id' => ['required', 'exists:products,id'],
-      ];
+      return Auth::guard('api')->check();
    }
 
    public function resolve($root, $args)
    {
-      $product = Product::findOrFail($args['id']);
-      return (bool) $product->delete();
+      $user = Auth::guard('api')->user();
+
+      if (! $user) {
+         throw new \Exception('Unauthorized');
+      }
+
+      $product = Product::find($args['id']);
+
+      if (! $product) {
+         throw new \Exception('Produto não encontrado');
+      }
+
+      return $product->delete();
    }
 }

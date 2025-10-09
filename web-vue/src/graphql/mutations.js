@@ -33,7 +33,7 @@ mutation($name: String!, $description: String!, $price: Float!, $stock: Int!) {
 `
 
 export const UPDATE_PRODUCT = gql`
-mutation($id: ID!, $name: String!, $description: String!, $price: Float!, $stock: Int!) {
+mutation($id: Int!, $name: String!, $description: String!, $price: Float!, $stock: Int!) {
   updateProduct(id: $id, name: $name, description: $description, price: $price, stock: $stock) {
     id
     name
@@ -45,7 +45,7 @@ mutation($id: ID!, $name: String!, $description: String!, $price: Float!, $stock
 `
 
 export const DELETE_PRODUCT = gql`
-mutation($id: ID!) {
+mutation($id: Int!) {
   deleteProduct(id: $id)
 }
 `
