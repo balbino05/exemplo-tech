@@ -1,0 +1,132 @@
+version: "3.9"
+
+services:
+  # ==========================
+  # 🐇 RabbitMQ Broker
+  # ==========================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # 🐘 MySQL Database
+  # ==========================
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devstore
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Root@12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # 🧠 Redis Cache
+  # ==========================
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # 🧩 Laravel API
+  # ==========================
+  api-laravel:
+    build:
+      context: ./api-laravel
+      dockerfile: Dockerfile
+    container_name: api-laravel
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:2aQh0t+examplekeyhere=
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: devstore
+      DB_USERNAME: root
+      DB_PASSWORD: Root@12345
+      REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # ⚡ Hyperf Tasks (microservices/hyperf-tasks)
+  # ==========================
+  hyperf-tasks:
+    build:
+      context: ./microservices/hyperf-tasks
+      dockerfile: Dockerfile
+    container_name: hyperf-tasks
+    ports:
+      - "9501:9501"
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      JWT_SECRET: "same-secret-as-laravel"
+      LARAVEL_AUTH_URL: http://api-laravel:8000/graphql
+    depends_on:
+      - rabbitmq
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # 🐹 Go Reports (microservices/go-reports)
+  # ==========================
+  go-reports:
+    build:
+      context: ./microservices/go-reports
+      dockerfile: Dockerfile
+    container_name: go-reports
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+    networks:
+      - exemplo-net
+
+  # ==========================
+  # 🐍 Python Automation (microservices/py-automation)
+  # ==========================
+  py-automation:
+    build:
+      context: ./microservices/py-automation
+      dockerfile: Dockerfile
+    container_name: py-automation
+    environment:
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - exemplo-net
+  # ==========================
+  # 🧱 .
